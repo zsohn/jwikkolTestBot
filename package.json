@@ -14,10 +14,11 @@
     "@discordjs/rest": "^0.1.0-canary.0",
     "discord-api-types": "^0.23.1",
     "discord.js": "^13.1.0",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "googleapis": "39"
   },
   "engines": {
     "node": "v16.9.1",
-    "npm": "7.21.1"
+    "yarn": "1.22.10"
   }
 }
