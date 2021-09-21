@@ -3,6 +3,9 @@ const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const myIntents = new Intents();
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const PORT = process.env.PORT || 5001;
+
+app.listen(PORT, () => console.log(`Server is listening on port ${PORT}...`));
 
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
