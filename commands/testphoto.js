@@ -15,5 +15,9 @@ module.exports = {
 };
 
 function attatchPhoto(interaction){
-	interaction.reply({files: [imgDir+"/"+testPhoto[Math.floor(Math.random()*testPhoto.length)]]});
+	try{
+		interaction.reply({files: [imgDir+"/"+testPhoto[Math.floor(Math.random()*testPhoto.length)]]});
+	} catch (error) {
+		console.error(error);
+	}
 }
