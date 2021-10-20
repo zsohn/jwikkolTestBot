@@ -3,6 +3,7 @@ const readline = require('readline');
 const {google} = require('googleapis');
 let drive;
 let auth1;
+let onSaveQueue = [];
 
 const exportObj = {
     get drive(){
@@ -14,8 +15,14 @@ const exportObj = {
         if(auth1){
             return auth1;
         }
-    }
+    },
+    queueOnSave: queueOnSave,
 };
+
+function queueOnSave(fun){
+  //add functionality for just running if runOnSaveQueue has already run
+  fun && typeof fun === "function" && onSaveQueue.push(fun);
+}
 
 console.log("googleSession.js");
 
@@ -83,33 +90,17 @@ function getAccessToken(oAuth2Client, callback) {
   });
 }
 
-/**
- * Lists the names and IDs of up to 10 files.
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
-function listFiles(auth) {
-  const drive = google.drive({version: 'v3', auth});
-  drive.files.list({
-    q: "'1CAHneUoeY685IuMudkGGTrATgAMRZzGY'"+" in "+"parents",
-    fields: 'nextPageToken, files(id, name)',
-  }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    const files = res.data.files;
-    if (files.length) {
-      console.log('Files:');
-      files.map((file) => {
-        console.log(`${file.name} (${file.id})`);
-      });
-    } else {
-      console.log('No files found.');
-    }
-  });
-}
 
 function saveDrive(auth) {
-    console.log("saveDrive");
-    auth1 = auth;
-    drive = google.drive({version: 'v3', auth});
+  auth1 = auth;
+  drive = google.drive({version: 'v3', auth});
+  runOnSaveQueue();
+}
+
+function runOnSaveQueue(){
+  for(let i = 0; i< onSaveQueue.length; i++){
+    onSaveQueue[i](auth1,drive);
+  }
 }
 
 module.exports = exportObj;

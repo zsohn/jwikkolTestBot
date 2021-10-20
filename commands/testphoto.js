@@ -9,8 +9,8 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('testphoto')
 		.setDescription('Replies with a photo from '+imgDir+'.'),
-	async execute(interaction, drive) {
-		await attatchPhoto(interaction, drive);
+	async execute(interaction) {
+		await attatchPhoto(interaction);
 	},
 };
 

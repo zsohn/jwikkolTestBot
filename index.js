@@ -3,7 +3,7 @@ const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const myIntents = new Intents();
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
-let googDri = require('./utils/googleSession.js')
+let googleSession = require('./utils/googleSession.js');
 
 const PORT = process.env.PORT || 5001;
 
@@ -12,6 +12,8 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
+	//run init if available
+	command.init && typeof command.init === "function" && command.init(googleSession)
 	// Set a new item in the Collection
 	// With the key as the command name and the value as the exported module
 	client.commands.set(command.data.name, command);
@@ -28,7 +30,7 @@ client.on('interactionCreate', async interaction => {
 	if (!command) return;
 
 	try {
-		await command.execute(interaction,googDri.drive);
+		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
